@@ -2394,6 +2394,37 @@ boot_select_or_erase(struct boot_loader_state *state)
                 BOOT_LOG_DBG("The copy_done flag had an unexpected value. Its "
                              "value was neither 'set' nor 'unset', but 'bad'.");
             }
+        }
+        flash_area_close(fap);
+    }
+
+    return rc;
+}
+
+void confirm_slot_complete(uint32_t slot)
+{
+    struct boot_swap_state state;
+    const struct flash_area *fap;
+    int fa_id;
+    int rc;
+
+    fa_id = flash_area_id_from_image_slot(slot);
+    rc = flash_area_open(fa_id, &fap);
+    assert(rc == 0);
+
+    memset(&state, 0, sizeof(struct boot_swap_state));
+    rc = boot_read_swap_state(fap, &state);
+    assert(rc == 0);
+
+    if (state.magic == BOOT_MAGIC_GOOD &&
+        (state.copy_done != BOOT_FLAG_SET ||
+         state.image_ok  == BOOT_FLAG_SET)) {
+
+        if (state.copy_done != BOOT_FLAG_SET) {
+            if (state.copy_done == BOOT_FLAG_BAD) {
+                BOOT_LOG_DBG("The copy_done flag had an unexpected value. Its "
+                             "value was neither 'set' nor 'unset', but 'bad'.");
+            }
             /*
              * Set the copy_done flag, indicating that the image has been
              * selected to boot. It can be set in advance, before even
@@ -2403,16 +2434,15 @@ boot_select_or_erase(struct boot_loader_state *state)
             rc = boot_write_copy_done(fap);
             if (rc != 0) {
                 BOOT_LOG_WRN("Failed to set copy_done flag of the image in "
-                             "the %s slot.", (active_slot == BOOT_PRIMARY_SLOT) ?
+                             "the %s slot.", (slot == BOOT_PRIMARY_SLOT) ?
                              "primary" : "secondary");
-                rc = 0;
             }
         }
-        flash_area_close(fap);
     }
 
-    return rc;
+    flash_area_close(fap);
 }
+
 #endif /* MCUBOOT_DIRECT_XIP && MCUBOOT_DIRECT_XIP_REVERT */
 
 #ifdef MCUBOOT_RAM_LOAD

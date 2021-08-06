@@ -65,6 +65,17 @@ config SINGLE_APPLICATION_SLOT
 	  uploading a new application overwrites the one that previously
 	  occupied the area.
 
+config BOOT_MAX_ALIGN
+	int "Flash write alignement in bytes"
+	default 8
+	help
+	  Bytes alignment when performing writes into flash memory.
+
+config BOOT_SOC_STM32H7XX
+	bool "Use booloader for STM32H7xx SOC"
+	default n
+	select USE_STM32_HAL_FLASH
+
 choice BOOT_SIGNATURE_TYPE
 	prompt "Signature type"
 	default BOOT_SIGNATURE_TYPE_RSA
