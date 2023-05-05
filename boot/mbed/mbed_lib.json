@@ -186,6 +186,11 @@
             "macro_name": "MCUBOOT_DIRECT_XIP_REVERT",
             "value": null
         },
+	"direct-xip-downgrade-allowed": {
+	    "help": "Disable downgrade prevention. Only valid if direct-xip is also enabled.",
+	    "macro_name": "MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED",
+	    "value": null
+	},
         "xip-secondary-slot-address": {
             "help": "Specify start address for secondary slot address in XIP-accessible memory. This is required if direct-xip is enabled.",
             "value": null

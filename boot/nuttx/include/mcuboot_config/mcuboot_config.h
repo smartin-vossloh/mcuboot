@@ -84,6 +84,12 @@
 #  define MCUBOOT_DIRECT_XIP_REVERT
 #endif
 
+/* Enable the revert mechanism in direct-xip mode. */
+
+#ifdef CONFIG_MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED
+#  define MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED
+#endif
+
 /* Enable the ram-load code path. */
 
 #ifdef CONFIG_MCUBOOT_RAM_LOAD
