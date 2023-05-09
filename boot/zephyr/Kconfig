@@ -282,12 +282,13 @@ config BOOT_DIRECT_XIP_REVERT
 	  (marked as confirmed in advance) just like in swap mode.
 
 config BOOT_DIRECT_XIP_DOWNGRADE_ALLOWED
-	bool "Swap the memory bank if the secondary slot are'nt checked"
+	bool "Swap memory banks if the secondary slot is not tested"
 	depends on BOOT_DIRECT_XIP
 	default n
 	help
-	  If y, enables the direct-xip mecanism swaps the memory bank if the slot 1
-	  are not yet checked by the bootloader, else it keep the current slot.
+	  If y, allows memory bank swap if the secondary slot has not been marked as
+	  tested by mcuboot. The version of the image on the secondary slot does not
+	  need to be greater than the image of the current slot.
 	  
 	  
 config BOOT_BOOTSTRAP
