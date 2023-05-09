@@ -281,6 +281,16 @@ config BOOT_DIRECT_XIP_REVERT
 	  attempt to boot the previous image. The images can also be made permanent
 	  (marked as confirmed in advance) just like in swap mode.
 
+config BOOT_DIRECT_XIP_DOWNGRADE_ALLOWED
+	bool "Swap memory banks if the secondary slot is not tested"
+	depends on BOOT_DIRECT_XIP
+	default n
+	help
+	  If y, allows memory bank swap if the secondary slot has not been marked as
+	  tested by mcuboot. The version of the image on the secondary slot does not
+	  need to be greater than the image of the current slot.
+	  
+	  
 config BOOT_BOOTSTRAP
 	bool "Bootstrap erased the primary slot from the secondary slot"
 	default n

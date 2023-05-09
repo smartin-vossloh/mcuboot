@@ -2276,6 +2276,54 @@ boot_get_slot_usage(struct boot_loader_state *state)
     return 0;
 }
 
+#if defined(MCUBOOT_DIRECT_XIP) && defined(MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED)
+/**
+ * Finds a slot containing an image for the current image.
+ * Gives the priority to a slot with a not tested image.
+ *
+ * @param  state        Boot loader status information.
+ *
+ * @return              NO_ACTIVE_SLOT if no available slot found, number of
+ *                      the found slot otherwise.
+ */
+static uint32_t
+find_slot_not_tested(struct boot_loader_state *state)
+{
+    uint32_t slot;
+    uint32_t candidate_slot = NO_ACTIVE_SLOT;
+    const struct flash_area *fap;
+    int fa_id;
+    struct boot_swap_state* active_swap_state;
+    int rc;
+
+    for (slot = 0; slot < BOOT_NUM_SLOTS; slot++) {
+        if (state->slot_usage[BOOT_CURR_IMG(state)].slot_available[slot]) {
+            if (candidate_slot == NO_ACTIVE_SLOT) {
+                candidate_slot = slot;
+            } else {
+		fa_id = flash_area_id_from_multi_image_slot(BOOT_CURR_IMG(state), slot);
+
+		rc = flash_area_open(fa_id, &fap);
+		assert(rc == 0);
+
+		active_swap_state = malloc(sizeof(struct boot_swap_state));
+		
+		assert(active_swap_state != 0);
+
+		rc = boot_read_swap_state(fap, active_swap_state);
+		assert(rc == 0);
+		if (active_swap_state->copy_done == BOOT_FLAG_UNSET) {
+			candidate_slot = slot;
+		}
+		free(active_swap_state);
+	    }
+	}
+    }
+
+    return candidate_slot;
+}
+
+#else
 /**
  * Finds the slot containing the image with the highest version number for the
  * current image.
@@ -2312,6 +2360,7 @@ find_slot_with_highest_version(struct boot_loader_state *state)
 
     return candidate_slot;
 }
+#endif
 
 #ifdef MCUBOOT_HAVE_LOGGING
 /**
@@ -3023,7 +3072,12 @@ boot_load_and_validate_images(struct boot_loader_state *state)
                 break;
             }
 
-            active_slot = find_slot_with_highest_version(state);
+#if defined(MCUBOOT_DIRECT_XIP) && defined(MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED)
+	    	active_slot = find_slot_not_tested(state);
+#else
+		active_slot = find_slot_with_highest_version(state);
+#endif
+
             if (active_slot == NO_ACTIVE_SLOT) {
                 BOOT_LOG_INF("No slot to load for image %d",
                              BOOT_CURR_IMG(state));
