@@ -84,14 +84,6 @@
 #  define MCUBOOT_DIRECT_XIP_REVERT
 #endif
 
-/* Allows memory bank swap if the secondary slot has not been marked as
- * tested by mcuboot.
- */
-
-#ifdef CONFIG_MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED
-#  define MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED
-#endif
-
 /* Enable the ram-load code path. */
 
 #ifdef CONFIG_MCUBOOT_RAM_LOAD
