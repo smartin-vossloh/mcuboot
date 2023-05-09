@@ -84,7 +84,9 @@
 #  define MCUBOOT_DIRECT_XIP_REVERT
 #endif
 
-/* Enable the revert mechanism in direct-xip mode. */
+/* Allows memory bank swap if the secondary slot has not been marked as
+ * tested by mcuboot.
+ */
 
 #ifdef CONFIG_MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED
 #  define MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED

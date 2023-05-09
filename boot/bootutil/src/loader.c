@@ -2278,8 +2278,8 @@ boot_get_slot_usage(struct boot_loader_state *state)
 
 #if defined(MCUBOOT_DIRECT_XIP) && defined(MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED)
 /**
- * Finds the slot containing the image with the highest version number for the
- * current image.
+ * Finds a slot containing an image for the current image.
+ * Gives the priority to a slot with a not tested image.
  *
  * @param  state        Boot loader status information.
  *
