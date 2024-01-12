@@ -613,6 +613,7 @@ boot_check_header_erased(struct boot_loader_state *state, int slot)
     return 0;
 }
 
+#if !defined(MCUBOOT_DIRECT_XIP_DOWNGRADE_ALLOWED)
 #if (BOOT_IMAGE_NUMBER > 1) || \
     defined(MCUBOOT_DIRECT_XIP) || \
     defined(MCUBOOT_RAM_LOAD) || \
@@ -655,6 +656,7 @@ boot_version_cmp(const struct image_version *ver1,
 
     return 0;
 }
+#endif
 #endif
 
 #if defined(MCUBOOT_DIRECT_XIP)
