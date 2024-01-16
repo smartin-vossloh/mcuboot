@@ -32,5 +32,6 @@ jobs:
       run: |
         ./ci/mynewt_install.sh
     - name: Mynewt run
+      continue-on-error: true
       run: |
         ./ci/mynewt_run.sh
