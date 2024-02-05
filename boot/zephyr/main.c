@@ -542,6 +542,7 @@ void main(void)
 
     (void)rc;
 
+    BOOT_LOG_INF("HW clock : %dMHz", CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC / 1000000);
 #ifdef SIGNATURE_KEY
     BOOT_LOG_INF("Sign. key: " SIGNATURE_KEY);
 #endif
