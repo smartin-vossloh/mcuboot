@@ -542,6 +542,10 @@ void main(void)
 
     (void)rc;
 
+#ifdef SIGNATURE_KEY
+    BOOT_LOG_INF("Sign. key: " SIGNATURE_KEY);
+#endif
+
     mcuboot_status_change(MCUBOOT_STATUS_STARTUP);
 
 #ifdef CONFIG_MCUBOOT_SERIAL
