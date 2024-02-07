@@ -292,6 +292,26 @@ if(NOT CONFIG_BOOT_SIGNATURE_KEY_FILE STREQUAL "")
   endif()
   message("MCUBoot bootloader key file: ${KEY_FILE}")
 
+  # Check whether the signature key file is tracked in a git repository.
+  # If so, this is not the production key.
+  cmake_path(SET sign_key_filepath NORMALIZE "${KEY_FILE}")
+
+  cmake_path(GET sign_key_filepath FILENAME sign_key_filename)
+  cmake_path(REMOVE_FILENAME sign_key_filepath OUTPUT_VARIABLE sign_key_directory)
+
+  execute_process(COMMAND git ls-files --error-unmatch -- ${sign_key_filename}
+		  WORKING_DIRECTORY ${sign_key_directory}
+		  RESULT_VARIABLE devel_keyfile
+		  OUTPUT_QUIET
+		  ERROR_QUIET)
+  if(${devel_keyfile} EQUAL 0)
+    message(STATUS "Using development signature key: ${sign_key_filepath}")
+    zephyr_compile_definitions(SIGNATURE_KEY="development")
+  else()
+    message(STATUS "Using production signature key")
+    zephyr_compile_definitions(SIGNATURE_KEY="production")
+  endif()
+
   set(GENERATED_PUBKEY ${ZEPHYR_BINARY_DIR}/autogen-pubkey.c)
   add_custom_command(
     OUTPUT ${GENERATED_PUBKEY}
