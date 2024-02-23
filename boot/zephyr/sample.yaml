@@ -57,7 +57,7 @@ tests:
     platform_allow: mimxrt1020_evk
     integration_platforms:
       - mimxrt1020_evk
-sample.bootloader.mcuboot.bibl_dsp3:
+  sample.bootloader.mcuboot.bibl_dsp3:
     extra_args:
       BOARD_ROOT=../../../../bibl-dsp3
       OVERLAY_CONFIG=../../../../bibl-dsp3/apps/overlays/mcuboot_h7.conf
